@@ -1,12 +1,12 @@
-import React from 'react'
-import ChatDashboard from '../components/chat/ChatDashboard'
+import React from "react";
+import ChatDashboard from "../components/chat/ChatDashboard";
 
 function Dashboard() {
   return (
     <>
-    <ChatDashboard />
+      <ChatDashboard />
     </>
-  )
+  );
 }
 
-export default Dashboard
+export default Dashboard;

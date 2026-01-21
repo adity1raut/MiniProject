@@ -1,12 +1,12 @@
-import React from 'react'
-import RegistrationForm from '../components/auth/RegistrationForm'
+import React from "react";
+import RegistrationForm from "../components/auth/RegistrationForm";
 
 function Register() {
   return (
-<> 
- <RegistrationForm />
-</>
-  )
+    <>
+      <RegistrationForm />
+    </>
+  );
 }
 
-export default Register
+export default Register;
