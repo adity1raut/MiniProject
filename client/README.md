@@ -109,21 +109,21 @@ frontend/
 
 ### ✅ Clear Separation
 
-* **components/** → UI blocks
-* **pages/** → Route-level screens
-* **context/** → Real-time global state
-* **hooks/** → Logic abstraction
-* **services/** → API & Socket logic
-* **ai/** → AI-only features (clean & modular)
+- **components/** → UI blocks
+- **pages/** → Route-level screens
+- **context/** → Real-time global state
+- **hooks/** → Logic abstraction
+- **services/** → API & Socket logic
+- **ai/** → AI-only features (clean & modular)
 
 ### ✅ Real-Time Ready
 
-* Single WebSocket connection via `SocketContext`
-* WebRTC logic isolated in `useVideoCall`
-* Events centralized in `socketEvents.js`
+- Single WebSocket connection via `SocketContext`
+- WebRTC logic isolated in `useVideoCall`
+- Events centralized in `socketEvents.js`
 
 ### ✅ Easy to Scale
 
-* Add voice calls / screen sharing easily
-* Replace Context with Redux without refactor
-* AI features stay isolated
+- Add voice calls / screen sharing easily
+- Replace Context with Redux without refactor
+- AI features stay isolated
