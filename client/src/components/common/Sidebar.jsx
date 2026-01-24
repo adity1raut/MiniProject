@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 
 const HomeIcon = ({ filled }) => (
@@ -87,8 +88,43 @@ export default function Sidebar({
   setShowUserMenu = () => {},
   setShowSettingsModal = () => {},
   handleLogout = () => {},
+  unreadNotifications = 3,
 }) {
   const { isDark } = useTheme();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Determine active view based on current route
+  const getActiveView = () => {
+    const path = location.pathname;
+    if (path === "/") return "home";
+    if (path === "/chat") return "messages";
+    if (path === "/notifications") return "notifications";
+    return currentView;
+  };
+
+  const activeView = getActiveView();
+
+  const handleNavigation = (view) => {
+    switch (view) {
+      case "home":
+        navigate("/");
+        break;
+      case "messages":
+        navigate("/chat");
+        break;
+      case "notifications":
+        navigate("/notifications");
+        break;
+      case "search":
+      case "profile":
+        // For views without dedicated routes yet
+        setCurrentView(view);
+        break;
+      default:
+        setCurrentView(view);
+    }
+  };
 
   return (
     <div
@@ -118,21 +154,21 @@ export default function Sidebar({
       {/* Navigation */}
       <nav className="flex-1 flex flex-col gap-1">
         <button
-          onClick={() => setCurrentView("home")}
+          onClick={() => handleNavigation("home")}
           className={`flex items-center gap-4 px-3 py-3 rounded-lg transition-all ${
-            currentView === "home"
+            activeView === "home"
               ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg font-bold"
               : `font-normal ${isDark ? "hover:bg-gray-700/50 text-gray-300" : "hover:bg-white/50 text-gray-700"}`
           }`}
         >
-          <HomeIcon filled={currentView === "home"} />
+          <HomeIcon filled={activeView === "home"} />
           <span className="text-base">Home</span>
         </button>
 
         <button
-          onClick={() => setCurrentView("search")}
+          onClick={() => handleNavigation("search")}
           className={`flex items-center gap-4 px-3 py-3 rounded-lg transition-all ${
-            currentView === "search"
+            activeView === "search"
               ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg font-bold"
               : `${isDark ? "hover:bg-gray-700/50 text-gray-300" : "hover:bg-white/50 text-gray-700"}`
           }`}
@@ -142,41 +178,46 @@ export default function Sidebar({
         </button>
 
         <button
-          onClick={() => setCurrentView("messages")}
+          onClick={() => handleNavigation("messages")}
           className={`flex items-center gap-4 px-3 py-3 rounded-lg transition-all relative ${
-            currentView === "messages"
+            activeView === "messages"
               ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg font-bold"
               : `font-normal ${isDark ? "hover:bg-gray-700/50 text-gray-300" : "hover:bg-white/50 text-gray-700"}`
           }`}
         >
-          <MessagesIcon filled={currentView === "messages"} />
+          <MessagesIcon filled={activeView === "messages"} />
           <span className="text-base">Messages</span>
           <span className="absolute left-6 top-2 w-2 h-2 bg-gradient-to-r from-red-500 to-pink-500 rounded-full shadow-md"></span>
         </button>
 
         <button
-          onClick={() => setCurrentView("notifications")}
-          className={`flex items-center gap-4 px-3 py-3 rounded-lg transition-all ${
-            currentView === "notifications"
+          onClick={() => handleNavigation("notifications")}
+          className={`flex items-center gap-4 px-3 py-3 rounded-lg transition-all relative ${
+            activeView === "notifications"
               ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg font-bold"
               : `font-normal ${isDark ? "hover:bg-gray-700/50 text-gray-300" : "hover:bg-white/50 text-gray-700"}`
           }`}
         >
-          <HeartIcon filled={currentView === "notifications"} />
+          <HeartIcon filled={activeView === "notifications"} />
           <span className="text-base">Notifications</span>
+          {unreadNotifications > 0 && (
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 min-w-[20px] h-5 px-1.5 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md">
+              {unreadNotifications > 9 ? "9+" : unreadNotifications}
+            </span>
+          )}
         </button>
 
         <button
-          onClick={() => setCurrentView("profile")}
+          onClick={() => handleNavigation("profile")}
           className={`flex items-center gap-4 px-3 py-3 rounded-lg transition-all ${
-            currentView === "profile"
+            activeView === "profile"
               ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg font-bold"
               : `font-normal ${isDark ? "hover:bg-gray-700/50 text-gray-300" : "hover:bg-white/50 text-gray-700"}`
           }`}
         >
           <div
             className={`w-6 h-6 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-white text-xs font-bold shadow-md ${
-              currentView === "profile"
+              activeView === "profile"
                 ? "ring-2 ring-white ring-offset-2 ring-offset-transparent"
                 : ""
             }`}
@@ -322,7 +363,9 @@ export default function Sidebar({
                 <span className="text-sm">Report a problem</span>
               </button>
 
-              <div className="h-px bg-gray-200 dark:bg-gray-700 my-1"></div>
+              <div
+                className={`h-px ${isDark ? "bg-gray-700/50" : "bg-gray-200/50"} my-1`}
+              ></div>
 
               <button
                 className={`w-full px-4 py-3 text-left ${
@@ -334,7 +377,9 @@ export default function Sidebar({
                 <span className="text-sm">Switch accounts</span>
               </button>
 
-              <div className="h-px bg-gray-200 dark:bg-gray-700 my-1"></div>
+              <div
+                className={`h-px ${isDark ? "bg-gray-700/50" : "bg-gray-200/50"} my-1`}
+              ></div>
 
               <button
                 onClick={handleLogout}
